@@ -1,4 +1,8 @@
 enum TaskStatus {
   pending,
-  completed,
+  completed;
+
+  bool isCompleted(){
+    return this == TaskStatus.completed;
+  }
 }

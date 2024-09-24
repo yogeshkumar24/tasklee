@@ -2,7 +2,7 @@ import 'package:tasklee/task/model/task_priority_enum.dart';
 import 'package:tasklee/task/model/task_status_enum.dart';
 
 class Task {
-  String? id;
+  int? id;
   String title;
   int deadline;
   String? description;
@@ -15,5 +15,6 @@ class Task {
     this.id,
     this.taskPriority = TaskPriority.medium,
     this.taskStatus = TaskStatus.pending,
+    this.description
   });
 }

@@ -1,13 +1,11 @@
 import 'package:tasklee/task/model/model.dart';
 
-abstract class TaskService{
-
+abstract class TaskService {
   Future addTask(Task task);
 
-  Future<List<Task>> fetchTask();
+  Future<List<Task>> fetchTasks();
 
   Future editTask(Task task);
 
-  Future<bool> deleteTask(String id);
-
+  Future<bool> deleteTask(int id);
 }
