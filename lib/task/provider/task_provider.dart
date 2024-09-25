@@ -24,11 +24,6 @@ class TaskProvider extends ChangeNotifier {
 
   List<Task> get taskList => filteredTaskList;
 
-  // List<Task> get filteredTaskList =>
-  //     _filteredTaskList.isNotEmpty && currentTaskStatusFilter != null
-  //         ? _filteredTaskList
-  //         : _taskList;
-
   List<Task> get filteredTaskList =>
       _filteredTaskList.isEmpty && currentTaskStatusFilter == null
           ? _taskList
