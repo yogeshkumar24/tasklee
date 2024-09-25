@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:tasklee/core/app_constants.dart';
+import 'package:tasklee/core/app_toast.dart';
+import 'package:tasklee/core/constant/app_constants.dart';
+import 'package:tasklee/core/constant/app_text.dart';
 import 'package:tasklee/task/model/model.dart';
 import 'package:tasklee/task/provider/provider.dart';
-import 'package:tasklee/task/service/task_service_abstract.dart';
+import 'package:tasklee/task/repository/task_repository.dart';
 
 class TaskProvider extends ChangeNotifier {
-  TaskProvider(this._taskService);
+  TaskProvider(this._taskRepository);
 
-  final TaskService _taskService;
+  final TaskRepository _taskRepository;
   List<Task> _taskList = [];
   List<Task> _filteredTaskList = [];
   ProviderState _providerState = ProviderState.ideal;
@@ -20,7 +22,10 @@ class TaskProvider extends ChangeNotifier {
 
   DateTime? _selectedDeadline;
 
-  List<Task> get taskList => _taskList;
+  List<Task> get taskList => filteredTaskList;
+
+  List<Task> get filteredTaskList =>
+      _filteredTaskList.isNotEmpty ? _filteredTaskList : _taskList;
 
   TaskPriority get taskPriority => _taskPriority;
 
@@ -29,6 +34,8 @@ class TaskProvider extends ChangeNotifier {
   TaskStatus? get currentTaskStatusFilter => _currentTaskStatusFilter;
 
   DateTime? get selectedDeadline => _selectedDeadline;
+
+  ProviderState get providerState => _providerState;
 
   void changePriority(TaskPriority taskPriority) {
     _taskPriority = taskPriority;
@@ -43,6 +50,8 @@ class TaskProvider extends ChangeNotifier {
     notifyListeners();
     if (taskStatus != null) {
       filterTaskByStatus(taskStatus);
+    } else {
+      _filteredTaskList = [];
     }
   }
 
@@ -51,21 +60,15 @@ class TaskProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Task> get filteredTaskList => _filteredTaskList;
-
-  ProviderState get providerState => _providerState;
-
   Future addTask(Task task) async {
     try {
       _providerState = ProviderState.loading;
       notifyListeners();
-      await _taskService.addTask(task);
-      //_taskList.add(task);
-      //TODO show success Toast here
-      _providerState = ProviderState.ideal;
+      await _taskRepository.addTask(task);
+      await fetchTask();
+      onSuccessEvent(AppText.addTaskSuccessMsg);
     } catch (e) {
-      _providerState = ProviderState.error;
-      //TODO show error Toast here
+      onErrorEvent(e);
     } finally {
       notifyListeners();
     }
@@ -75,10 +78,13 @@ class TaskProvider extends ChangeNotifier {
     try {
       _providerState = ProviderState.loading;
       notifyListeners();
-      _taskList = await _taskService.fetchTasks();
+      _taskList = await _taskRepository.fetchTasks();
+      if (_currentTaskStatusFilter != null) {
+        filterTaskByStatus(_currentTaskStatusFilter!);
+      }
       _providerState = ProviderState.ideal;
     } catch (e) {
-      _providerState = ProviderState.error;
+      onErrorEvent(e);
     } finally {
       notifyListeners();
     }
@@ -88,11 +94,11 @@ class TaskProvider extends ChangeNotifier {
     try {
       _providerState = ProviderState.loading;
       notifyListeners();
-      await _taskService.editTask(task);
+      await _taskRepository.editTask(task);
       await fetchTask();
-      _providerState = ProviderState.ideal;
+      onSuccessEvent(AppText.updateTaskMsg);
     } catch (e) {
-      _providerState = ProviderState.error;
+      onErrorEvent(e);
     } finally {
       notifyListeners();
     }
@@ -102,15 +108,24 @@ class TaskProvider extends ChangeNotifier {
     try {
       _providerState = ProviderState.loading;
       notifyListeners();
-      await _taskService.deleteTask(id);
-      // _taskList.removeWhere((task) => task.id == id);
+      await _taskRepository.deleteTask(id);
       await fetchTask();
-      _providerState = ProviderState.ideal;
+      onSuccessEvent(AppText.deleteTaskMsg);
     } catch (e) {
-      _providerState = ProviderState.error;
+      onErrorEvent(e);
     } finally {
       notifyListeners();
     }
+  }
+
+  void onSuccessEvent(String msg) {
+    _providerState = ProviderState.ideal;
+    AppToast.showSuccessToast(msg);
+  }
+
+  void onErrorEvent(Object e) {
+    AppToast.showErrorToast(e.toString());
+    _providerState = ProviderState.error;
   }
 
   void filterTaskByStatus(TaskStatus taskStatus) {

@@ -44,7 +44,7 @@ class _TaskFilterBottomSheetState extends State<TaskFilterBottomSheet> {
             itemBuilder: (BuildContext context, int index) {
               TaskStatus status = TaskStatus.values[index];
               return RadioListTile<TaskStatus>(
-                title: Text(status.name.capitalizeFirst!.split('.').last),
+                title: Text(status.name.capitalizeFirst.split('.').last),
                 value: status,
                 groupValue: _selectedStatus,
                 onChanged: (value) {

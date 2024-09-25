@@ -5,7 +5,7 @@ void showDeleteConfirmationDialog(BuildContext context, {required VoidCallback o
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Delete Confirmation'),
+        title: const Text('Delete Alert'),
         content: const Text('Are you sure you want to delete this item?'),
         actions: [
           TextButton(

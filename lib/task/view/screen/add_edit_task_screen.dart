@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tasklee/core/core.dart';
 import 'package:tasklee/task/model/model.dart';
@@ -31,7 +30,7 @@ class AddEditTaskScreen extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: CustomAppBar(
-        title: task == null ? AppConstants.addTask : AppConstants.editTask,
+        title: task == null ? AppText.addTask : AppText.editTask,
       ),
       body: Consumer<TaskProvider>(
         builder: (context, taskProvider, _) {
@@ -48,12 +47,12 @@ class AddEditTaskScreen extends StatelessWidget {
                         controller: _titleController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return AppConstants.inputTitle;
+                            return AppText.titleValidateMsg;
                           }
                         },
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: AppConstants.title),
+                            hintText: AppText.title),
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -61,7 +60,7 @@ class AddEditTaskScreen extends StatelessWidget {
                         maxLines: 2,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: AppConstants.description),
+                            hintText: AppText.description),
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -72,7 +71,7 @@ class AddEditTaskScreen extends StatelessWidget {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select deadline';
+                            return AppText.deadlineValidateMsg;
                           }
                         },
                         readOnly: true,
@@ -90,19 +89,14 @@ class AddEditTaskScreen extends StatelessWidget {
                         decoration: const InputDecoration(
                           suffixIcon: Icon(Icons.calendar_month),
                           border: OutlineInputBorder(),
-                          hintText: 'Select Deadline',
+                          hintText: AppText.selectDeadline,
                         ),
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<TaskPriority>(
                         value: taskProvider.taskPriority,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select task priority';
-                          }
-                        },
                         decoration: const InputDecoration(
-                          hintText: AppConstants.selectPriority,
+                          hintText: AppText.selectPriority,
                           border: OutlineInputBorder(),
                         ),
                         items: TaskPriority.values.map((TaskPriority priority) {
@@ -118,13 +112,8 @@ class AddEditTaskScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       DropdownButtonFormField<TaskStatus>(
                         value: taskProvider.taskStatus,
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select task status';
-                          }
-                        },
                         decoration: const InputDecoration(
-                          hintText: AppConstants.selectStatus,
+                          hintText: AppText.selectStatus,
                           border: OutlineInputBorder(),
                         ),
                         items: TaskStatus.values.map((TaskStatus status) {
@@ -141,8 +130,8 @@ class AddEditTaskScreen extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () => saveTask(context, task: task),
                         child: Text(task == null
-                            ? AppConstants.add
-                            : AppConstants.update),
+                            ? AppText.add
+                            : AppText.update),
                       ),
                     ],
                   ),

@@ -1,16 +1,13 @@
 # tasklee
 
-A new Flutter project.
+A task management demo project.
 
-## Getting Started
+****## Getting Started
 
-This project is a starting point for a Flutter application.
+- On the list task screen i have show only task title and task description. Because i am showing all
+  the other details on TaskDetailsScreen. It will improve UI and UX for users.
+- I have used MVVM architecture with provider.
+- Used manual Dependency Injection.
+- For offline save, I have used SQLite.
+- Feature based directory structure
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

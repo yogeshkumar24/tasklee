@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tasklee/core/core.dart';
-import 'package:tasklee/task/model/model.dart';
-import 'package:tasklee/task/model/task_model.dart';
 import 'package:tasklee/task/provider/provider.dart';
-import 'package:tasklee/task/view/widget/task_filter_bottom_sheet.dart';
+import 'package:tasklee/task/view/widget/filter_icon_widget.dart';
 import 'package:tasklee/task/view/widget/task_list_widget.dart';
 
 class TaskListScreen extends StatelessWidget {
@@ -14,45 +12,9 @@ class TaskListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: CustomAppBar(
-        title: AppConstants.appName,
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return TaskFilterBottomSheet(
-                          (TaskStatus? taskStatus) {
-                            taskProvider(context)
-                                .setTaskStatusFilter(taskStatus);
-                          },
-                          selectedTaskStatus:
-                              taskProvider(context)
-                                  .currentTaskStatusFilter,
-                        );
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.filter_alt)),
-              if (taskProvider(context)
-                      .currentTaskStatusFilter !=
-                  null)
-                const Positioned(
-                  right: 12,
-                  child: Text(
-                    '.',
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32),
-                  ),
-                )
-            ],
-          )
-        ],
+      appBar: const CustomAppBar(
+        title: AppText.appName,
+        actions: [FilterIconWidget()],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -87,7 +49,8 @@ class TaskListScreen extends StatelessWidget {
     ));
   }
 
-  TaskProvider taskProvider(BuildContext context) => Provider.of<TaskProvider>(context, listen: false);
+  TaskProvider taskProvider(BuildContext context) =>
+      Provider.of<TaskProvider>(context, listen: false);
 
   Future<void> openAddTaskScreen(BuildContext context) async {
     final provider = taskProvider(context);
